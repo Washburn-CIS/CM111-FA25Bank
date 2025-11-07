@@ -1,24 +1,39 @@
 import java.util.Scanner;
 
 public class BankApplication {
+
+    public static final int NUM_ACCOUNTS = 3;
+    public static final String ACCOUNT_DATA = "bill,4236,4.40\njill,5642,4.40\nphil,-1111,5000000";
+
     public static void main(String[] args) {
-        BankAccount[] accounts = new BankAccount[3];
 
-        accounts[0] = new BankAccount();
-        accounts[0].setHolderName("bill");
-        accounts[0].setNumber(4236);
-        accounts[0].deposit(4.40);
-        
-        accounts[1] = new BankAccount();
-        accounts[1].setHolderName("jill");
-        accounts[1].setNumber(5642);
-        accounts[1].deposit(30);
-        
-        accounts[2] = new BankAccount();
-        accounts[2].setHolderName("phil");
-        accounts[2].setNumber(1111);
-        accounts[2].deposit(5000000);
+        BankAccount[] accounts = new BankAccount[NUM_ACCOUNTS];
 
+        String[] lines = ACCOUNT_DATA.split("\n");
+
+        if(lines.length != NUM_ACCOUNTS) {
+            System.out.println("Wrong number of accounts");
+            System.exit(1);
+        }
+
+        try {
+            for(int i=0; i<NUM_ACCOUNTS; i++) {
+                String[] tokens = lines[i].split(",");
+                accounts[i] = new BankAccount();
+                accounts[i].setHolderName(tokens[0]);
+                accounts[i].setNumber(Integer.parseInt(tokens[1]));
+                accounts[i].deposit(Double.parseDouble(tokens[2]));
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+            System.out.println("Account data is bad, fix it");
+            System.exit(1);
+        } catch(NumberFormatException e) {
+            System.out.println("Account data is bad, fix it");
+            System.exit(1);
+        } catch(IllegalArgumentException e) {
+            System.out.println("Account data is bad, fix it");
+            System.exit(1);
+        }
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the bank app!");
         while(true) {

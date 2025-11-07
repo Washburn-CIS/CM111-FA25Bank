@@ -11,7 +11,10 @@ public class BankAccount {
         holderName = newHolderName;
     }
 
-    public void setNumber(int newNumber) {
+    public void setNumber(int newNumber) throws IllegalArgumentException {
+        if(newNumber < 0) {
+            throw new IllegalArgumentException();
+        }
         number = newNumber;
     }
 
