@@ -1,24 +1,19 @@
 import java.util.Scanner;
+import java.io.*;
+
 
 public class BankApplication {
-
-    public static final int NUM_ACCOUNTS = 3;
-    public static final String ACCOUNT_DATA = "bill,4236,4.40\njill,5642,4.40\nphil,-1111,5000000";
-
     public static void main(String[] args) {
 
-        BankAccount[] accounts = new BankAccount[NUM_ACCOUNTS];
-
-        String[] lines = ACCOUNT_DATA.split("\n");
-
-        if(lines.length != NUM_ACCOUNTS) {
-            System.out.println("Wrong number of accounts");
-            System.exit(1);
-        }
+        File f = new File("accounts.txt");
+        BankAccount[] accounts = null;
 
         try {
-            for(int i=0; i<NUM_ACCOUNTS; i++) {
-                String[] tokens = lines[i].split(",");
+            Scanner fin = new Scanner(f);
+            int numAccounts = Integer.parseInt(fin.nextLine());
+            accounts = new BankAccount[numAccounts];
+            for(int i=0; i<numAccounts; i++) {
+                String[] tokens = fin.nextLine().split(",");
                 accounts[i] = new BankAccount();
                 accounts[i].setHolderName(tokens[0]);
                 accounts[i].setNumber(Integer.parseInt(tokens[1]));
@@ -33,6 +28,8 @@ public class BankApplication {
         } catch(IllegalArgumentException e) {
             System.out.println("Account data is bad, fix it");
             System.exit(1);
+        } catch(FileNotFoundException e) {
+            System.out.println("accounts.txt must exist for this to work!");
         }
         Scanner input = new Scanner(System.in);
         System.out.println("Welcome to the bank app!");
@@ -83,7 +80,21 @@ public class BankApplication {
                     System.out.println("done!");
                     break;
                 } case 4:
-                    System.out.println("bye!");
+                    try {
+                        PrintWriter fout = new PrintWriter(new File("accounts.txt"));
+                        fout.println(accounts.length);
+                        for(int i=0; i<accounts.length; i++) {
+                            fout.print(accounts[i].getHolderName());
+                            fout.print(",");
+                            fout.print(accounts[i].getNumber());
+                            fout.print(",");
+                            fout.println(accounts[i].getBalance());
+                        }
+                        fout.close();
+                        System.out.println("bye!");
+                    } catch(FileNotFoundException e) {
+                        System.out.println("Error saving file... uh oh");
+                    }
                     System.exit(1);
             }
         }
