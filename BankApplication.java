@@ -4,8 +4,19 @@ import java.io.*;
 
 public class BankApplication {
     public static void main(String[] args) {
+        String filename;
 
-        File f = new File("accounts.txt");
+        if(args.length == 0) {
+            filename = "accounts.txt"; // use default filename
+        } else if(args.length == 1) {
+            filename = args[0];  // use the filename provided through command-line
+        } else {
+            System.out.println("Error: only provide one (or zero) command-line argument(s)");
+            System.exit(1);
+            return;
+        }
+
+        File f = new File(filename);
         BankAccount[] accounts = null;
 
         try {
@@ -81,7 +92,7 @@ public class BankApplication {
                     break;
                 } case 4:
                     try {
-                        PrintWriter fout = new PrintWriter(new File("accounts.txt"));
+                        PrintWriter fout = new PrintWriter(new File(filename));
                         fout.println(accounts.length);
                         for(int i=0; i<accounts.length; i++) {
                             fout.print(accounts[i].getHolderName());
